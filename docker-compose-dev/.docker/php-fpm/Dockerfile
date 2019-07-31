@@ -30,3 +30,4 @@ WORKDIR /var/www
 CMD ["php-fpm", "-F"]
 
 ENTRYPOINT ["/bin/sh", "/root/startup.sh"]
+VOLUME /var/www

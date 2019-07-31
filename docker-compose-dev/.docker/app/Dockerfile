@@ -1,33 +1,68 @@
-FROM php:7.3-fpm-alpine
+#
+# First we create the vendor folder by using composer to get all php dependencies
+#
+
+#FROM composer:1.8.6 as vendor
+#
+#COPY database/ database/
+#
+#COPY composer.json composer.json
+#COPY composer.lock composer.lock
+#
+#RUN composer install \
+#    --ignore-platform-reqs \
+#    --no-interaction \
+#    --no-plugins \
+#    --no-scripts \
+#    --prefer-dist
+
+#
+# Frontend
+#
+#FROM node:12.7.0-alpine as frontend
+#
+#RUN mkdir -p /app/public
+#
+#COPY package.json webpack.mix.js /app/
+#COPY resources/ /app/resources/
+#
+#WORKDIR /app
+#
+#RUN npm install
+#RUN npm run development
+
+##
+## Application
+##
+FROM php:7.3-fpm-alpine as seat-plus
+
+#COPY . /seatplus
+#COPY --from=vendor /app/vendor/ /seatplus/vendor/
+#COPY --from=frontend /app/public/js/ /seatplus/public/js/
+#COPY --from=frontend /app/public/css/ /seatplus/public/css/
+#COPY --from=frontend /app/mix-manifest.json /seatplus/mix-manifest.json
+
+COPY startup.sh /root/startup.sh
+RUN chmod +x /root/startup.sh
 
 RUN apk add --no-cache \
     # Install OS level dependencies
     git zip unzip curl \
     libpng-dev libmcrypt-dev bzip2-dev icu-dev mariadb-client && \
     # Install PHP dependencies
-    docker-php-ext-install pdo_mysql gd bz2 intl pcntl && \
-    # Prepare composer for use
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    docker-php-ext-install pdo_mysql gd bz2 intl pcntl
 
-#    # Prepare the source directory for SeAT
-#    mkdir -p /usr/src && cd /usr/src && \
-#    # And install SeAT
-#    composer create-project eveseat/seat --no-scripts --stability beta --no-dev --no-ansi --no-progress && \
-#    # Cleanup composer caches
-#    composer clear-cache --no-ansi && \
-#    # Publish migrations, assets and generate API documenation
-#    cd /usr/src/seat && \
-#    php artisan vendor:publish --force --all && \
-#    php artisan l5-swagger:generate && \
-#    # Fix up the source permissions to be owned by www-data
-#    chown -R www-data:www-data /usr/src/seat/
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin \
+    --filename=composer && hash -r
+
+RUN apk add --update nodejs npm
+
+#RUN chown -R www-data:www-data storage
 
 VOLUME /var/www
 WORKDIR /var/www
 
-COPY startup.sh /root/startup.sh
-RUN chmod +x /root/startup.sh
-
+#
 CMD ["php-fpm", "-F"]
-
+#
 ENTRYPOINT ["/bin/sh", "/root/startup.sh"]
