@@ -29,10 +29,10 @@ while ! mysqladmin ping -hmariadb -u$MYSQL_USER -p$MYSQL_PASSWORD --silent; do
     sleep 3
 done
 
-npm install && npm run development
 composer update
 php artisan vendor:publish --force --all
 php artisan migrate
+npm install && npm run development
 
 php-fpm -F
 
