@@ -30,9 +30,13 @@ while ! mysqladmin ping -hmariadb -u$MYSQL_USER -p$MYSQL_PASSWORD --silent; do
 done
 
 composer update
-php artisan vendor:publish --force --all
-php artisan migrate
-npm install && npm run development
+#php artisan vendor:publish --force --all
+php artisan vendor:publish --tag=web --force
+php artisan vendor:publish --tag=horizon-config --force
+php artisan vendor:publish --tag=horizon-assets --force
+php artisan vendor:publish --tag=horizon-provider --force
+#php artisan migrate
+#npm install && npm run development
 
 php-fpm -F
 

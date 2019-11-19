@@ -12,10 +12,6 @@ git clone https://github.com/seatplus/core seatplus && cd seatplus
 mkdir -p packages/seatplus && cd packages/seatplus
 git clone https://github.com/seatplus/web
 git clone https://github.com/seatplus/eveapi
-#git clone https://github.com/eveseat/eveapi
-#git clone https://github.com/eveseat/eseye
-#git clone https://github.com/eveseat/notifications
-#git clone https://github.com/eveseat/services
-#git clone https://github.com/eveseat/web
+git clone https://github.com/seatplus/auth
 
 echo "Done! docker-compose up now!"
