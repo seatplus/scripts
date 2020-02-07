@@ -35,6 +35,8 @@ php artisan vendor:publish --tag=web --force
 php artisan vendor:publish --tag=horizon-config --force
 php artisan vendor:publish --tag=horizon-assets --force
 php artisan vendor:publish --tag=horizon-provider --force
+
+# install passport
 #php artisan migrate
 #npm install && npm run development
 
