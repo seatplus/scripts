@@ -69,6 +69,8 @@ RUN mkdir -p /usr/src/php/ext/redis \
 VOLUME /var/www
 WORKDIR /var/www
 
+#RUN chown -R www-data:www-data storage
+
 #
 CMD ["php-fpm", "-F"]
 #

@@ -94,6 +94,21 @@ services:
     networks:
       - backend
 
+### cron ################################################
+  cron:
+    build: .docker/worker
+    restart: always
+    volumes:
+      - ${CODE}:/var/www
+    depends_on:
+      - seat-plus
+      - mariadb
+      - redis
+    environment:
+      CONTAINER_ROLE: cron
+    networks:
+      - backend
+
 #  seat-worker:
 #    build:
 #      context: ./eveseat-worker
