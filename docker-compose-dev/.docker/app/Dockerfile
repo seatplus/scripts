@@ -34,7 +34,7 @@
 ##
 ## Application
 ##
-FROM php:7.3-fpm-alpine as seat-plus
+FROM php:7.4-fpm-alpine as seat-plus
 
 #COPY . /seatplus
 #COPY --from=vendor /app/vendor/ /seatplus/vendor/
@@ -57,10 +57,19 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN apk add --update nodejs npm
 
+ENV PHPREDIS_VERSION 5.1.1
+
+RUN mkdir -p /usr/src/php/ext/redis \
+    && curl -L https://github.com/phpredis/phpredis/archive/$PHPREDIS_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1 \
+    && echo 'redis' >> /usr/src/php-available-exts \
+    && docker-php-ext-install redis
+
 #RUN chown -R www-data:www-data storage
 
 VOLUME /var/www
 WORKDIR /var/www
+
+#RUN chown -R www-data:www-data storage
 
 #
 CMD ["php-fpm", "-F"]

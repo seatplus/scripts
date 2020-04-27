@@ -2,3 +2,4 @@
 /fullchain.pem
 /privkey.pem
 /seatplus/
+!/seatplus/composer.lock

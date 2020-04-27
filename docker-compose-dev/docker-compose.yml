@@ -35,23 +35,12 @@ services:
     image: redis:5-alpine
     command: redis-server --appendonly yes
     restart: always
+    ports:
+      - "6379:6379"
     volumes:
     - "redis:/data"
     networks:
     - backend
-
-### php-fpm ################################################
-#  php-fpm:
-#    build:
-#      context: ./.docker/php-fpm
-#    restart: always
-#    volumes:
-#      - ${CODE}:/var/www/
-#    depends_on:
-#      - mariadb
-#      - redis
-#    networks:
-#      - backend
 
 ### seat-plus ################################################
   seat-plus:
@@ -90,49 +79,35 @@ services:
       - backend
       - frontend
 
+### worker ################################################
+  worker:
+    build: .docker/worker
+    restart: always
+    environment:
+      - NGINX_HOST=${NGINX_HOST}
+    volumes:
+      - ${CODE}:/var/www
+    depends_on:
+      - seat-plus
+      - mariadb
+      - redis
+    networks:
+      - backend
 
-### Old ###
-#services:
-#
-#
-#
-#  nginx:
-#    image: nginx:1.15-alpine #was 1.13
-#    depends_on:
-#    - seatplus-app
-#    container_name: seat-nginx
-#    restart: always
-#    environment:
-#    - NGINX_HOST=${NGINX_HOST}
-#    volumes:
-#    - ${SEAT_CODE}/public:/var/www/seat/public
-#    - ./config/nginx.conf.template:/etc/nginx/nginx.conf.template
-#    # Remove the comment below to enable nginx logs to disk.
-#    #- ./logs/nginx/:/var/log/nginx/
-#    ports:
-#    - "${NGINX_HTTP}:80"
-#    - "${NGINX_HTTPS}:443"
-#    command: /bin/sh -c "envsubst '${NGINX_HOST}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
-#    networks:
-#    - seatplus-network
-#
-#  seat-app:
-#    build:
-#      context: ./eveseat-app
-#    image: seat-app
-#    container_name: seat-app
-#    restart: always
-#    environment:
-#      MYSQL_USER: ${MYSQL_USER}
-#      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-#      MYSQL_DATABASE: ${MYSQL_DATABASE}
-#    volumes:
-#    - ${SEAT_CODE}:/var/www/seat
-#    depends_on:
-#    - mariadb
-#    - redis
-#    networks:
-#    - seatplus-network
+### cron ################################################
+  cron:
+    build: .docker/worker
+    restart: always
+    volumes:
+      - ${CODE}:/var/www
+    depends_on:
+      - seat-plus
+      - mariadb
+      - redis
+    environment:
+      CONTAINER_ROLE: cron
+    networks:
+      - backend
 
 #  seat-worker:
 #    build:
