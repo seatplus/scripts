@@ -99,14 +99,18 @@ services:
   cron:
     image: seatplus/worker:latest
     restart: always
+    environment:
+      CONTAINER_ROLE: cron
+      DB_HOST: mariadb
+        REDIS_HOST: redis
+    env_file:
+      - ./.env
     volumes:
       - "seatplus-code:/var/www"
     depends_on:
       - seat-plus
       - mariadb
       - redis
-    environment:
-      CONTAINER_ROLE: cron
     networks:
       - backend
 
