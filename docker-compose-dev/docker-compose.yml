@@ -33,7 +33,7 @@ services:
 ### Redis ################################################
   redis:
     image: redis:5-alpine
-    command: redis-server --appendonly yes
+    #command: redis-server --appendonly yes
     restart: always
     ports:
       - "6379:6379"
@@ -55,6 +55,7 @@ services:
       - MYSQL_USER=${MARIADB_USER}
       - MYSQL_PASSWORD=${MARIADB_PASSWORD}
       - MYSQL_DATABASE=${MARIADB_DATABASE}
+      - COMPOSER_MEMORY_LIMIT=-1
     networks:
       - backend
 
