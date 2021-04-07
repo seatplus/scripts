@@ -48,9 +48,9 @@ RUN chmod +x /root/startup.sh
 RUN apk add --no-cache \
     # Install OS level dependencies
     git zip unzip curl \
-    libpng-dev libmcrypt-dev bzip2-dev icu-dev mariadb-client && \
+    libpng-dev libzip-dev libmcrypt-dev bzip2-dev icu-dev mariadb-client && \
     # Install PHP dependencies
-    docker-php-ext-install pdo_mysql gd bz2 intl pcntl
+    docker-php-ext-install pdo_mysql gd bz2 intl pcntl zip
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin \
     --filename=composer && hash -r

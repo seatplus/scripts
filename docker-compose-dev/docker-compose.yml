@@ -51,6 +51,7 @@ services:
     depends_on:
       - mariadb
       - redis
+      - selenium
     environment:
       - MYSQL_USER=${MARIADB_USER}
       - MYSQL_PASSWORD=${MARIADB_PASSWORD}
@@ -110,17 +111,10 @@ services:
     networks:
       - backend
 
-#  seat-worker:
-#    build:
-#      context: ./eveseat-worker
-#    image: eveseat-worker
-#    container_name: seat-worker
-#    restart: always
-#    volumes:
-#    - ${SEAT_CODE}:/var/www/seat
-#    depends_on:
-#    - seat-app # so that we can get composer installed
-#    - mariadb
-#    - redis
-#    networks:
-#    - seatplus-network
+### selenium ##########################################
+  selenium:
+    image: 'selenium/standalone-chrome'
+    volumes:
+      - '/dev/shm:/dev/shm'
+    networks:
+      - backend
