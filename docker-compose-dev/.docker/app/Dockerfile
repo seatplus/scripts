@@ -67,7 +67,7 @@ RUN mkdir -p /usr/src/php/ext/redis \
 #RUN chown -R www-data:www-data storage
 
 VOLUME /var/www
-WORKDIR /var/www
+WORKDIR /var/www/core
 
 #RUN chown -R www-data:www-data storage
 

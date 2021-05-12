@@ -4,24 +4,24 @@ set -e
 
 role=${CONTAINER_ROLE:-worker}
 
-cd /var/www
+cd /var/www/core
 
 if [ "$role" = "worker" ]; then
   # Ensure we have vendor/ ready
-  while [ ! -f /var/www/vendor/autoload.php ]
+  while [ ! -f /var/www/core/vendor/autoload.php ]
   do
       echo "SeAT plus App container might not be ready yet... sleeping..."
       sleep 30
   done
 
-  su www-data -s /bin/sh -c 'php /var/www/artisan horizon'
+  su www-data -s /bin/sh -c 'php /var/www/core/artisan horizon'
   
 
 elif [ "$role" = "cron" ]; then
 
   while [ true ]
   do
-      php /var/www/artisan schedule:run --verbose --no-interaction &
+      php /var/www/core/artisan schedule:run --verbose --no-interaction &
       sleep 60
   done
 

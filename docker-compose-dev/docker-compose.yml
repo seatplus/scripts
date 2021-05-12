@@ -67,7 +67,7 @@ services:
     environment:
       - NGINX_HOST=${NGINX_HOST}
     volumes:
-      - ${CODE}/public:/var/www/public
+      - ${CODE}/core/public:/var/www/core/public
       - ./.docker/nginx/nginx.conf.template:/etc/nginx/nginx.conf.template
       # Remove the comment below to enable nginx logs to disk.
       #- ./logs/nginx/:/var/log/nginx/

@@ -5,6 +5,7 @@ set -e
 # Working dir is /var/www from the container.
 #tar cf - --one-file-system --overwrite -C /seatplus . | tar xf -
 
+# change chown of storage folder for www-data user / nginx
 chown -R www-data:www-data storage
 
 # Ensure we have .env, if we dont, try and fix it automatically
@@ -29,7 +30,7 @@ while ! mysqladmin ping -hmariadb -u$MYSQL_USER -p$MYSQL_PASSWORD --silent; do
     sleep 3
 done
 
-#composer update
+composer update
 
 php artisan vendor:publish --tag=web --force
 php artisan vendor:publish --tag=horizon-config --force
